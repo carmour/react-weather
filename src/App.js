@@ -11,29 +11,30 @@ function App() {
 
   const [query, setQuery] = useState('');
   const [weather, setWeather] = useState({});
+  let buttonClicked = false;
 
-  const search = event => {
+  const toggleButton = event => {
+    buttonClicked = true;
+    console.log("buttonstatus is: " + buttonClicked)
+    search();
+  }
+
+  const searchEnter = event => {
     if (event.key === "Enter") {
-      fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
-        .then(res => res.json())
-        .then(result => {
-          setWeather(result);
-          console.log(result);
-          setQuery('');
-        });
+      search();
     }
   }
 
-  const searchButton = event => {
+  const search = () => {
     fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
       .then(res => res.json())
       .then(result => {
         setWeather(result);
         console.log(result);
         setQuery('');
+        buttonClicked = false;
       });
   }
-
 
   const dateBuilder = (d) => {
     let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
@@ -51,21 +52,20 @@ function App() {
     <div className={
       (typeof weather.main != "undefined") ? ((weather.main.temp > 16) ? 'app sunny' : 'app') : 'app'}>
       <main>
-        <div className="search-box" onSubmit={searchButton}>
+        <div className="search-box">
           <input
             type='text'
             className='search-bar'
             placeholder='Search'
             onChange={e => setQuery(e.target.value)}
             value={query}
-            onKeyPress={search}
+            onKeyPress={searchEnter}
           />
           <button
             className="search-button"
-            // type="submit"
             onClick={e => setQuery(e.target.value)}
             value={query}
-            onClick={searchButton}
+            onClick={e => toggleButton()}
           >Search</button>
         </div>
         {(typeof weather.main != "undefined") ? (
@@ -79,7 +79,7 @@ function App() {
               <div className='weather'>{weather.weather[0].main}</div>
             </div>
           </div>
-        ) : ('')}
+        ) : ('Please enter a search term')}
       </main>
     </div>
   );
