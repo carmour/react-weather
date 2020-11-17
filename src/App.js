@@ -11,11 +11,8 @@ function App() {
 
   const [query, setQuery] = useState('');
   const [weather, setWeather] = useState({});
-  let buttonClicked = false;
 
-  const toggleButton = event => {
-    buttonClicked = true;
-    console.log("buttonstatus is: " + buttonClicked)
+  const buttonOnClick = () => {
     search();
   }
 
@@ -26,14 +23,16 @@ function App() {
   }
 
   const search = () => {
-    fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
-      .then(res => res.json())
-      .then(result => {
-        setWeather(result);
-        console.log(result);
-        setQuery('');
-        buttonClicked = false;
-      });
+    // console.log(query)
+    if (query !== '') {
+      fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+        .then(res => res.json())
+        .then(result => {
+          setWeather(result);
+          // console.log(result);
+          setQuery('');
+        });
+    }
   }
 
   const dateBuilder = (d) => {
@@ -63,9 +62,8 @@ function App() {
           />
           <button
             className="search-button"
-            onClick={e => setQuery(e.target.value)}
+            onClick={(e => setQuery(e.target.value), buttonOnClick)}
             value={query}
-            onClick={e => toggleButton()}
           >Search</button>
         </div>
         {(typeof weather.main != "undefined") ? (
