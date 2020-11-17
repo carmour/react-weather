@@ -79,7 +79,7 @@ function App() {
               <div className='weather'>{weather.weather[0].main}</div>
             </div>
           </div>
-        ) : ('Please enter a search term')}
+        ) : (<div className='no-search'>Please enter a valid search term.</div>)}
       </main>
     </div>
   );
