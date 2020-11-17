@@ -24,6 +24,17 @@ function App() {
     }
   }
 
+  const searchButton = event => {
+    fetch(`${api.base}weather?q=${query}&units=metric&APPID=${api.key}`)
+      .then(res => res.json())
+      .then(result => {
+        setWeather(result);
+        console.log(result);
+        setQuery('');
+      });
+  }
+
+
   const dateBuilder = (d) => {
     let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
     let days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -40,7 +51,7 @@ function App() {
     <div className={
       (typeof weather.main != "undefined") ? ((weather.main.temp > 16) ? 'app sunny' : 'app') : 'app'}>
       <main>
-        <div className="search-box">
+        <div className="search-box" onSubmit={searchButton}>
           <input
             type='text'
             className='search-bar'
@@ -49,6 +60,13 @@ function App() {
             value={query}
             onKeyPress={search}
           />
+          <button
+            className="search-button"
+            // type="submit"
+            onClick={e => setQuery(e.target.value)}
+            value={query}
+            onClick={searchButton}
+          >Search</button>
         </div>
         {(typeof weather.main != "undefined") ? (
           <div>
